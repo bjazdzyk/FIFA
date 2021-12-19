@@ -2,21 +2,32 @@ const degToRad =(deg)=>{
   return deg*Math.PI/180
 }
 
+let cameraHeight = 30
+let FOV = 60
+
+// let cameraHeight = 40
+// let FOV = 20
+
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(30, window.innerWidth / window.innerHeight, 0.1, 1000);
+scene.background=new THREE.Color("skyblue")
+const camera = new THREE.PerspectiveCamera(FOV, window.innerWidth / window.innerHeight, 0.1, 1000);
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
+const loader = new THREE.TextureLoader();
+ 
+const material = new THREE.MeshBasicMaterial({
+  map: loader.load('img/grass.jpg'),
+});
+const geometry = new THREE.PlaneGeometry( 105, 68 );
+//const material = new THREE.MeshLambertMaterial( {map: , side: THREE.DoubleSide} );
+const plane = new THREE.Mesh( geometry, material );
+scene.add( plane );
 
-const grassG = new THREE.BoxGeometry(105, 68, 1);
-const grassM = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-const grass = new THREE.Mesh(grassG, grassM);
-scene.add(grass);
-
-camera.position.z = 100;
-camera.position.y = -100;
-camera.rotation.x = degToRad(45)
+camera.position.z = cameraHeight;
+camera.position.y = -cameraHeight*Math.sqrt(3);
+camera.rotation.x = degToRad(60)
 
 const loop =()=> {
   requestAnimationFrame(loop);
