@@ -1,24 +1,29 @@
+const degToRad =(deg)=>{
+  return deg*Math.PI/180
+}
+
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+const camera = new THREE.PerspectiveCamera(30, window.innerWidth / window.innerHeight, 0.1, 1000);
 
 const renderer = new THREE.WebGLRenderer();
-renderer.setSize( window.innerWidth, window.innerHeight );
-document.body.appendChild( renderer.domElement );
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
 
-const geometry = new THREE.BoxGeometry();
-const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-const cube = new THREE.Mesh( geometry, material );
-scene.add( cube );
+const grassG = new THREE.BoxGeometry(105, 68, 1);
+const grassM = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+const grass = new THREE.Mesh(grassG, grassM);
+scene.add(grass);
 
-camera.position.z = 5;
+camera.position.z = 100;
+camera.position.y = -100;
+camera.rotation.x = degToRad(45)
 
 const loop =()=> {
-  requestAnimationFrame( loop );
+  requestAnimationFrame(loop);
 
-  cube.rotation.x += 0.01;
-  cube.rotation.y += 0.01;
 
-  renderer.render( scene, camera );
+
+  renderer.render(scene, camera);
 };
 
 loop();
