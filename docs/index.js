@@ -32,9 +32,11 @@ camera.rotation.x = degToRad(60)
 
 class Player{
   constructor(color, x, y, height){
+    this.x = x
+    this.y = y
     this.color = color
     this.height = height
-    this.playerGeo = new THREE.BoxGeometry(0.25, 0.5, this.height)
+    this.playerGeo = new THREE.BoxGeometry(0.5, 0.25, this.height)
     this.playerMat = new THREE.MeshBasicMaterial({color: this.color})
     this.playerMesh = new THREE.Mesh(this.playerGeo, this.playerMat)
     this.playerEdg = new THREE.EdgesGeometry(this.playerGeo)
@@ -42,6 +44,10 @@ class Player{
     this.Player = new THREE.Group()
     this.Player.add(this.playerMesh)
     this.Player.add(this.playerLin)
+    this.Player.position.x = this.x
+    this.Player.position.y = this.y
+    this.Player.position.z = this.height/2
+
   }
 
   show(){
@@ -72,8 +78,31 @@ class Player{
   }
 }
 
-let messi = new Player("red", 0, 0, 2, 0.2)
+class Ball{
+  constructor(x, y, z, color, radius){
+    this.x = x
+    this.y = y
+    this.z = z
+    this.color = color
+    this.radius = radius
+    this.ballGeo = new THREE.SphereGeometry(0.2, 32, 15)
+    this.ballMat = new THREE.MeshBasicMaterial({color : this.color})
+    this.ballMesh = new THREE.Mesh(this.ballGeo, this.ballMat)
+    this.ballMesh.position.set(this.x, this.y, this.z)
+  }
+  show(){
+    scene.add(this.ballMesh)
+  }
+  hide(){
+    scene.remove(this.ballMesh)
+  }
+}
+
+let messi = new Player("red", 0, 0, 1.8, 0.2)
 messi.show()
+
+let brazuca = new Ball(1, 1, 0.15, "yellow", 0.3)
+brazuca.show()
 
 const loop =()=> {
   requestAnimationFrame(loop);
