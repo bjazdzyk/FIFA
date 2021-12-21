@@ -47,6 +47,7 @@ class Player{
     this.Player.position.x = this.x
     this.Player.position.y = this.y
     this.Player.position.z = this.height/2
+    this.defensive = true
     this.show()
 
   }
@@ -58,7 +59,6 @@ class Player{
     scene.remove(this.Player)
   }
   run(speed){
-    console.log(this.Player.rotation.z)
     let x = 0
     let y = 0
     if(keys["KeyD"]){
@@ -97,6 +97,18 @@ class Player{
     this.Player.position.x += x
     this.Player.position.y += y
   }
+  controlls(ball){
+    if(this.defensive){
+      let dX = Math.abs(ball.Ball.position.x-this.Player.position.x)
+      let dY = Math.abs(ball.Ball.position.y-this.Player.position.y)
+      let dZ = Math.abs(ball.Ball.position.z-0.15)
+      console.log(Math.abs(ball.Ball.position.x), Math.abs(this.Player.position.x), dX)
+      if(Math.sqrt(dX*dX + dY*dY) < 1){
+        ball.setPos(this.Player.position.x, this.Player.position.y, ball.radius)
+        console.log("lol")
+      }
+    }
+  }
 }
 
 class Ball{
@@ -109,23 +121,30 @@ class Ball{
     this.ballGeo = new THREE.SphereGeometry(0.2, 32, 15)
     this.ballMat = new THREE.MeshBasicMaterial({color : this.color})
     this.ballMesh = new THREE.Mesh(this.ballGeo, this.ballMat)
-    this.ballMesh.position.set(this.x, this.y, this.z)
+    this.Ball = new THREE.Group()
+    this.Ball.add(this.ballMesh)
+    this.Ball.position.set(this.x, this.y, this.z)
+    this.ballMesh.position.set(0, 0, 0)
     this.show()
   }
   show(){
-    scene.add(this.ballMesh)
+    scene.add(this.Ball)
   }
   hide(){
-    scene.remove(this.ballMesh)
+    scene.remove(this.Ball)
+  }
+  setPos(x, y, z){
+    this.Ball.position.set(x, y, z)
   }
 }
 
-let messi = new Player("red", 0, 0, 1.8)
-let brazuca = new Ball(1, 1, 0.15, "yellow", 0.3)
+let messi = new Player("red", -5, 0, 1.6)
+let brazuca = new Ball(0, 0, 0.15, "yellow", 0.3)
 
 const loop =()=> {
   requestAnimationFrame(loop);
-    messi.run(0.1)
+  messi.run(0.1)
+  messi.controlls(brazuca)
   renderer.render(scene, camera);
 };
 
@@ -137,7 +156,7 @@ function keyDown(e) {
   keys[e.code] = true
 }
 function keyUp(e) {
-  keys[e.code] = false
+  keys[e.code] = null
 }
 
 loop();
