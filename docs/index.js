@@ -103,7 +103,7 @@ class Player{
       let dY = Math.abs(ball.Ball.position.y-this.Player.position.y)
       let dZ = Math.abs(ball.Ball.position.z-0.15)
       console.log(Math.abs(ball.Ball.position.x), Math.abs(this.Player.position.x), dX)
-      if(Math.sqrt(dX*dX + dY*dY) < 1){
+      if(Math.sqrt(dX*dX + dY*dY) < ball.radius){
         ball.setPos(this.Player.position.x, this.Player.position.y, ball.radius)
         console.log("lol")
       }
@@ -123,6 +123,7 @@ class Ball{
     this.ballMesh = new THREE.Mesh(this.ballGeo, this.ballMat)
     this.Ball = new THREE.Group()
     this.Ball.add(this.ballMesh)
+    this.Ball.add(camera)
     this.Ball.position.set(this.x, this.y, this.z)
     this.ballMesh.position.set(0, 0, 0)
     this.show()
