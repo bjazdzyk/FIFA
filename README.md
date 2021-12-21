@@ -1,3 +1,5 @@
 # FIFA
+FIFA in javascript
 
-fifa in web browser
+# CONTROLS
+use wasd to move player
