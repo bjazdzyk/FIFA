@@ -34,31 +34,62 @@ class Player{
   constructor(color, x, y, height){
     this.color = color
     this.height = height
-    this.playerGeo = new THREE.BoxGeometry(0.5, 0.5, this.height)
+    this.playerGeo = new THREE.BoxGeometry(0.25, 0.5, this.height)
     this.playerMat = new THREE.MeshBasicMaterial({color: this.color})
     this.playerMesh = new THREE.Mesh(this.playerGeo, this.playerMat)
     this.playerEdg = new THREE.EdgesGeometry(this.playerGeo)
     this.playerLin = new THREE.LineSegments( this.playerEdg, new THREE.LineBasicMaterial( { color: "black" } ) );
+    this.Player = new THREE.Group()
+    this.Player.add(this.playerMesh)
+    this.Player.add(this.playerLin)
   }
 
   show(){
-    scene.add(this.playerMesh)
-    scene.add(this.playerLin)
+    scene.add(this.Player)
   }
   hide(){
-    scene.remove(this.playerMesh)
+    scene.remove(this.Player)
+  }
+  run(speed){
+    let x = 0
+    let y = 0
+
+    if(keys["KeyD"]){
+      x = speed
+    }
+    if(keys["KeyA"]){
+      x = -speed
+    }
+    if(keys["KeyW"]){
+      y = speed
+    }
+    if(keys["KeyS"]){
+      y = -speed
+    }
+
+    this.Player.position.x += x
+    this.Player.position.y += y
   }
 }
 
-let messi = new Player("red", 0, 0, 3)
+let messi = new Player("red", 0, 0, 2, 0.2)
 messi.show()
 
 const loop =()=> {
   requestAnimationFrame(loop);
-
-
-
+    messi.run(0.2)
   renderer.render(scene, camera);
 };
+
+//events
+let keys = {}
+document.addEventListener('keydown', keyDown);
+document.addEventListener('keyup', keyUp);
+function keyDown(e) {
+  keys[e.code] = true
+}
+function keyUp(e) {
+  keys[e.code] = false
+}
 
 loop();
