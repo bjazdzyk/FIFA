@@ -5,7 +5,7 @@ const degToRad =(deg)=>{
 // let cameraHeight = 30
 // let FOV = 60
 
-let cameraHeight = 10
+let cameraHeight = 20
 let FOV = 40
 
 const scene = new THREE.Scene();
@@ -47,6 +47,7 @@ class Player{
     this.Player.position.x = this.x
     this.Player.position.y = this.y
     this.Player.position.z = this.height/2
+    this.show()
 
   }
 
@@ -57,22 +58,42 @@ class Player{
     scene.remove(this.Player)
   }
   run(speed){
+    console.log(this.Player.rotation.z)
     let x = 0
     let y = 0
-
     if(keys["KeyD"]){
-      x = speed
+      x += speed
     }
     if(keys["KeyA"]){
-      x = -speed
+      x -= speed
     }
     if(keys["KeyW"]){
-      y = speed
+      y += speed
     }
     if(keys["KeyS"]){
-      y = -speed
+      y -= speed
     }
-
+    if(x > 0){
+      if(y > 0){
+        this.Player.rotation.z = degToRad(-45)
+      }else if(y < 0){
+        this.Player.rotation.z = degToRad(45)
+      }else{
+        this.Player.rotation.z = degToRad(90)
+      }
+    }else if(x < 0){
+      if(y > 0){
+        this.Player.rotation.z = degToRad(-135)
+      }else if(y < 0){
+        this.Player.rotation.z = degToRad(135)
+      }else{
+        this.Player.rotation.z = degToRad(-90)
+      }
+    }else if(y > 0){
+      this.Player.rotation.z = degToRad(180)
+    }else if(y < 0){
+      this.Player.rotation.z = degToRad(0)
+    }
     this.Player.position.x += x
     this.Player.position.y += y
   }
@@ -89,6 +110,7 @@ class Ball{
     this.ballMat = new THREE.MeshBasicMaterial({color : this.color})
     this.ballMesh = new THREE.Mesh(this.ballGeo, this.ballMat)
     this.ballMesh.position.set(this.x, this.y, this.z)
+    this.show()
   }
   show(){
     scene.add(this.ballMesh)
@@ -98,15 +120,12 @@ class Ball{
   }
 }
 
-let messi = new Player("red", 0, 0, 1.8, 0.2)
-messi.show()
-
+let messi = new Player("red", 0, 0, 1.8)
 let brazuca = new Ball(1, 1, 0.15, "yellow", 0.3)
-brazuca.show()
 
 const loop =()=> {
   requestAnimationFrame(loop);
-    messi.run(0.2)
+    messi.run(0.1)
   renderer.render(scene, camera);
 };
 
