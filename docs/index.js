@@ -116,6 +116,9 @@ class Ball{
     this.x = x
     this.y = y
     this.z = z
+    this.velX = 0
+    this.velY = 0
+    this.velZ = 0
     this.color = color
     this.radius = radius
     this.ballGeo = new THREE.SphereGeometry(0.2, 32, 15)
@@ -135,17 +138,32 @@ class Ball{
     scene.remove(this.Ball)
   }
   setPos(x, y, z){
-    this.Ball.position.set(x, y, z)
+    this.x = x
+    this.y = y
+    this.z = z
+  }
+  kick(x, y, z){
+    this.velX += x
+    this.velY += y
+    this.velZ += z
+  }
+  update(){
+    this.x += this.velX
+    this.y += this.velY
+    this.z += this.velZ
+    this.Ball.position.set(this.x, this.y, this.z)
   }
 }
 
 let messi = new Player("red", -5, 0, 1.6)
 let brazuca = new Ball(0, 0, 0.15, "yellow", 0.3)
 
+brazuca.kick(0.1, 0, 0.05)
 const loop =()=> {
   requestAnimationFrame(loop);
   messi.run(0.1)
   messi.controlls(brazuca)
+  brazuca.update()
   renderer.render(scene, camera);
 };
 
