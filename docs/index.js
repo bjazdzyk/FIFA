@@ -147,7 +147,15 @@ class Ball{
     this.velY += y
     this.velZ += z
   }
+  checkGravity(){
+    if(this.z > this.radius){
+      this.kick(0, 0, -0.01)
+    }else{
+      this.velZ *= -1
+    }
+  }
   update(){
+    this.checkGravity()
     this.x += this.velX
     this.y += this.velY
     this.z += this.velZ
@@ -156,9 +164,10 @@ class Ball{
 }
 
 let messi = new Player("red", -5, 0, 1.6)
-let brazuca = new Ball(0, 0, 0.15, "yellow", 0.3)
+let brazuca = new Ball(0, 0, 10, "yellow", 0.3)
 
-brazuca.kick(0.1, 0, 0.05)
+//brazuca.kick(0.1, 0, 0.05)
+
 const loop =()=> {
   requestAnimationFrame(loop);
   messi.run(0.1)
