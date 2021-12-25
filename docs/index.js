@@ -47,7 +47,7 @@ class Player{
     this.Player.position.x = this.x
     this.Player.position.y = this.y
     this.Player.position.z = this.height/2
-    this.defensive = true
+    this.ballControll = null
     this.show()
 
   }
@@ -98,15 +98,19 @@ class Player{
     this.Player.position.y += y
   }
   controlls(ball){
-    if(this.defensive){
+    if(this.ballcontroll == null){
       let dX = Math.abs(ball.Ball.position.x-this.Player.position.x)
       let dY = Math.abs(ball.Ball.position.y-this.Player.position.y)
-      let dZ = Math.abs(ball.Ball.position.z-0.15)
+      let dZ = Math.abs(ball.Ball.position.z-this.Player.position.z)
       console.log(Math.abs(ball.Ball.position.x), Math.abs(this.Player.position.x), dX)
-      if(Math.sqrt(dX*dX + dY*dY) < ball.radius){
+      if(Math.sqrt(Math.sqrt(dX*dX + dY*dY) + dZ*dZ/3) < ball.radius*2){
+        ball.setVel(0, 0, 0)
         ball.setPos(this.Player.position.x, this.Player.position.y, ball.radius)
-        console.log("lol")
+        this.ballControll = ball
       }
+    }else if(this.ballControll == ball){
+      ball.setVel(0, 0, 0)
+      ball.setPos(this.Player.position.x, this.Player.position.y, ball.radius)
     }
   }
 }
@@ -142,14 +146,19 @@ class Ball{
     this.y = y
     this.z = z
   }
-  kick(x, y, z){
+  addVel(x, y, z){
     this.velX += x
     this.velY += y
     this.velZ += z
   }
+  setVel(x, y, z){
+    this.velX = 0
+    this.velY = 0
+    this.velZ = 0
+  }
   checkGravity(){
     if(this.z > this.radius){
-      this.kick(0, 0, -0.01)
+      this.addVel(0, 0, -0.01)
     }else{
       this.velZ *= -1
     }
@@ -164,9 +173,9 @@ class Ball{
 }
 
 let messi = new Player("red", -5, 0, 1.6)
-let brazuca = new Ball(0, 0, 10, "yellow", 0.3)
+let brazuca = new Ball(0, 0, 5, "yellow", 0.3)
 
-//brazuca.kick(0.1, 0, 0.05)
+
 
 const loop =()=> {
   requestAnimationFrame(loop);
