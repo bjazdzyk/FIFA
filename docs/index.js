@@ -109,7 +109,12 @@ class Player{
         this.ballControll = ball
       }
     }else if(this.ballControll == ball){
-      ball.setPos(this.Player.position.x, this.Player.position.y, ball.radius)
+      if(Math.sqrt(Math.sqrt(dX*dX + dY*dY) + dZ*dZ/3) < ball.radius*2){
+        ball.setPos(this.Player.position.x, this.Player.position.y, ball.radius)
+      }else {
+        this.ballControll = null
+      }
+      
     }
   }
   update(){
@@ -159,9 +164,9 @@ class Ball{
     this.velY = 0
     this.velZ = 0
   }
-  gravity(){
+  applyGravity(){
     if(this.z > this.radius){
-      this.addVel(0, 0, -0.01)
+      this.addVel(0, 0, -0.008)
     }else if(this.z < this.radius){
       console.log(this.velZ)
       this.z = this.radius
@@ -173,8 +178,23 @@ class Ball{
       }
     }
   }
+  applyFriction(){
+    if(this.z <= this.radius){
+      if(this.velZ == 0){
+        this.velX *= 0.97
+        this.velY *= 0.97
+      }else{
+        this.velX *= 0.75
+        this.velY *= 0.75
+      }
+    }else{
+      this.velX *= 0.999
+      this.velY *= 0.999
+    }
+  }
   update(){
-    this.gravity()
+    this.applyGravity()
+    this.applyFriction()
     this.x += this.velX
     this.y += this.velY
     this.z += this.velZ
@@ -183,9 +203,9 @@ class Ball{
 }
 
 let messi = new Player("red", -5, 0, 1.6, 0.1)
-let brazuca = new Ball(0, 0, 5, "yellow", 0.3)
+let brazuca = new Ball(-50, 0, 0, "yellow", 0.3)
 
-//brazuca.addVel(0.05, 0, 0)
+brazuca.addVel(0.7, 0, 1)
 
 const loop =()=> {
   requestAnimationFrame(loop);
