@@ -31,7 +31,8 @@ camera.position.y = -cameraHeight*Math.sqrt(3)
 camera.rotation.x = degToRad(60)
 
 class Player{
-  constructor(color, x, y, height){
+  constructor(color, x, y, height, speed){
+    this.speed = speed
     this.x = x
     this.y = y
     this.color = color
@@ -111,6 +112,10 @@ class Player{
       ball.setPos(this.Player.position.x, this.Player.position.y, ball.radius)
     }
   }
+  update(){
+    messi.run(this.speed)
+    messi.controlls(brazuca)
+  }
 }
 
 class Ball{
@@ -177,15 +182,14 @@ class Ball{
   }
 }
 
-let messi = new Player("red", -5, 0, 1.6)
+let messi = new Player("red", -5, 0, 1.6, 0.1)
 let brazuca = new Ball(0, 0, 5, "yellow", 0.3)
 
 //brazuca.addVel(0.05, 0, 0)
 
 const loop =()=> {
   requestAnimationFrame(loop);
-  messi.run(0.1)
-  messi.controlls(brazuca)
+  messi.update()
   brazuca.update()
   renderer.render(scene, camera);
 };
